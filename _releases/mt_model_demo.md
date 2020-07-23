@@ -42,6 +42,7 @@ Vestibulum tempus odio ac libero rutrum, ut dictum massa sagittis. Morbi non nun
 Aenean malesuada blandit elementum. Curabitur id tortor turpis. Phasellus ut felis enim. Curabitur a lorem tortor. Maecenas interdum sit amet erat quis convallis. Nam sapien sem, finibus vel ornare non, varius vel dui. Cras ac posuere nisl. Sed fringilla nulla et volutpat porttitor. Duis non iaculis dui. Pellentesque neque orci, lobortis et viverra tincidunt, efficitur vitae orci. Interdum et malesuada fames ac ante ipsum primis in faucibus.
 
 # Try the model
+<script src="https://www.google.com/recaptcha/api.js?render=6LcmgbQZAAAAABtOLkxEuM7hjtXxnr7Nwj8FQZl0"></script>
 
 <div class="test1 w-100 d-flex flex-column">  
   <div class="textarea-box d-flex flex-column pt-2 pb-3">              
@@ -278,7 +279,36 @@ Aenean malesuada blandit elementum. Curabitur id tortor turpis. Phasellus ut fel
   }
 } 
 </style>
+<script>
+    $(document).ready(function () {
 
+      $(".btn-translate").submit(async function (event) {
+        //Don't submit yet
+        event.preventDefault();
+        
+        //Secret key provided by Google
+        const apiKey = "6LcmgbQZAAAAAFmUrFbzUKdBnWzrd95-Q_01zMnl";
+        const apiString = "http://localhost:5000/recaptcha-51410/us-central1/sendRecaptcha";
+        
+        try {
+
+            //Generate token
+            const token = await grecaptcha.execute(apiKey, { action: 'form' })
+            const response = await axios.get(`${apiString}?token=${token}`);
+            const score = response.data.score;
+            console.log("score: ", score);
+
+            //Take action here based on score.
+            if (score > 0.5) {
+              $(".btn-translate").unbind('submit').submit();
+            }
+        }      
+        catch(e) {
+            console.log("error: ", e);
+        }
+      });
+    });      
+</script>
 <script>
   
   let sl = "", tl = ""  
@@ -325,8 +355,17 @@ Aenean malesuada blandit elementum. Curabitur id tortor turpis. Phasellus ut fel
       $('.textarea-mt-output').val("429 Too Many Request Error." +
       "\nYou have sent too many requests recently."); 
       console.log('mterr: ', err)  
-    }    
+    }            
+  }
+
+  async function checkBot(event) {
+    event.preventDefault();
         
+    //Secret key provided by Google
+    const apiKey = "6LcmgbQZAAAAAFmUrFbzUKdBnWzrd95-Q_01zMnl";
+    const apiString = "";
+
+
   }
 
   async function translate() {
@@ -334,7 +373,7 @@ Aenean malesuada blandit elementum. Curabitur id tortor turpis. Phasellus ut fel
     $('.btn-translate').addClass('d-none')
     $('.compare-tran').addClass('d-none')        
     $('.textarea-gt-output').removeClass('catch-error');
-    $('.textarea-mt-output').removeClass('catch-error');    
+    $('.textarea-mt-output').removeClass('catch-error');   
 
     const input = $('.textarea-input').val()    
     check_lang()
