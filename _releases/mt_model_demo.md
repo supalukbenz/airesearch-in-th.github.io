@@ -46,11 +46,11 @@ Aenean malesuada blandit elementum. Curabitur id tortor turpis. Phasellus ut fel
 <div class="test1 w-100 d-flex flex-column">  
   <div class="textarea-box d-flex flex-column pt-2 pb-3">              
     <div class="lang-translate d-flex align-items-center justify-content-center border border-bottom-0 bg-white">
-      <div class="lang-input font-weight-bold text-center d-flex align-items-center justify-content-center">Thai</div>
-      <button class="btn my-0 mx-5 btn-convert p-0 bg-white">
+      <div class="lang-input font-weight-bold text-center d-flex align-items-center justify-content-center" id="lang-input">Thai</div>
+      <button class="btn my-0 mx-5 btn-convert p-0 bg-white" id="btn-convert">
         <i class="fas fa-exchange-alt"></i>          
       </button>
-      <div class="lang-output font-weight-bold text-center">English</div>
+      <div class="lang-output font-weight-bold text-center" id="lang-output">English</div>
     </div>    
     <textarea class="textarea-input px-3 py-2 border border-bottom-0" rows="5"></textarea>
     <div class="feature-input text-right w-100 bg-white border border-top-0">
@@ -58,54 +58,50 @@ Aenean malesuada blandit elementum. Curabitur id tortor turpis. Phasellus ut fel
         <i class="fas fa-trash-alt"></i>
       </button>
     </div>
-    <!-- <button type="button" class="btn mx-auto mt-3 border-0 btn-translate btn-translate-fn">
-      Translate      
-    </button> -->
-    <!-- <div class="mx-auto mt-3 border-0"><i class="fa fa-angle-double-down"></i></div> -->
+    <div class="d-flex justify-content-center">
+      <button type="button" class="btn btn-translate btn-light border border-secondary my-2 mx-3" id="btn-translate">
+        <i class="fa fa-globe"></i> Translate
+      </button>
+      <button type="button" class="btn btn-remove btn-remove-all btn-light border border-secondary my-2 mx-3 d-none" id="btn-remove-all">
+        <i class="fa fa-trash-alt"></i> Remove
+      </button>
+      <div class="loading d-none text-center my-2 mx-3" id="loading"> 
+        <div class="spinner-grow spinner-left" role="status">        
+        </div>
+        <div class="spinner-grow spinner-center" role="status">        
+        </div>
+        <div class="spinner-grow spinner-right" role="status">        
+      </div>
+    </div>
+  </div>
   </div>
   <div class="compare-output-container d-flex flex-row mb-2">    
-    <div class="textarea-result translate-output d-none flex-column border flex-fill mr-1 w-100">
+    <div class="textarea-mt-result translate-output d-none flex-column border flex-fill mr-1 w-100">
       <div class="mt-container px-3 pt-2 bg-white border-bottom">
         <div class="mt-title pb-1">MT Model</div>
       </div>
-      <textarea class="textarea-mt-output p-3" id="output-translation" rows="6" readonly></textarea>
+      <textarea class="textarea-mt-output p-3" id="output-mt-translation" rows="6" readonly></textarea>
       <div class="feature-output text-right bg-white">
-        <button class="btn btn-sm border-0 bg-white btn-features btn-copy" data-toggle="tooltip" data-placement="bottom" title="copy to clipboard">
+        <button class="btn btn-sm border-0 bg-white btn-features" id="btn-mt-copy" data-toggle="tooltip" data-placement="bottom" title="copy to clipboard">
           <i class="fa fa-clone"></i>
         </button>
       </div>
     </div>    
-    <div class="textarea-result translate-output d-none flex-column border flex-fill ml-1 w-100">    
+    <div class="textarea-gt-result translate-output d-none flex-column border flex-fill ml-1 w-100">    
       <div class="gt-container px-3 pt-2 bg-white border-bottom">
         <div class="gt-title pb-1">Google Translation Model</div>
       </div>
-      <textarea class="textarea-gt-output p-3" id="output-translation" rows="6" readonly></textarea>
+      <textarea class="textarea-gt-output p-3" id="output-gt-translation" rows="6" readonly></textarea>
       <div class="feature-output text-right bg-white">
-        <button class="btn btn-sm border-0 bg-white btn-features btn-copy" data-toggle="tooltip" data-placement="bottom" title="copy to clipboard">
+        <button class="btn btn-sm border-0 bg-white btn-features" id="btn-gt-copy" data-toggle="tooltip" data-placement="bottom" title="copy to clipboard">
           <i class="fa fa-clone"></i>
         </button>
       </div>
     </div>
   </div>  
-  <span class="compare-tran text-right d-none">
-    Compare with <a class="link-google-tran">Google Translate</a>
-  </span>	
-  <div class="d-flex justify-content-center">
-    <button type="button" class="btn btn-translate btn-light btn-translate-fn border border-secondary m-2" id="test1">
-      <i class="fa fa-globe"></i> Translate
-    </button>
-    <button type="button" class="btn btn-remove btn-remove-all btn-light border border-secondary m-2 d-none">
-      <i class="fa fa-trash-alt"></i> Remove
-    </button>
-    <div class="loading d-none text-center mt-3 "> 
-      <div class="spinner-grow spinner-left" role="status">        
-      </div>
-      <div class="spinner-grow spinner-center" role="status">        
-      </div>
-      <div class="spinner-grow spinner-right" role="status">        
-      </div>
-    </div>
-  </div>
+  <span class="compare-tran text-right d-none" id="compare-translate">
+    Compare with <a class="link-google-tran" id="link-google-translate">Google Translate</a>
+  </span>	  
 </div>
 
 <style>
@@ -133,28 +129,26 @@ Aenean malesuada blandit elementum. Curabitur id tortor turpis. Phasellus ut fel
     transition: all 0.3s;
     background-color: #303030;
     color: #ffffff;
-    outline: 0;
-    border-radius: 20px;
+    outline: 0;    
     width: 7rem;
     font-size: 0.9rem;
+  }
+
+  .btn-remove-all {
+    background: #ffffff;
+    color: #303030;
   }
 
   .btn-translate:hover, .btn-translate:focus {    
     background: #52348c;
     color: #ffffff;
-    transition: all 0.5s;
+    transition: all 0.3s;
     box-shadow: none;
-    -webkit-transform: scale(1.1);
-    transform: scale(1.1);    
   }
 
   .btn-remove-all:hover, .btn-remove-all:focus {    
-    background: #ffffff;
-    color: #303030;
-    transition: all 0.5s;
+    transition: all 0.3s;
     box-shadow: none;
-    -webkit-transform: scale(1.1);
-    transform: scale(1.1);
   }
 
   .btn-feature:hover, .btn-feature:focus {
@@ -203,6 +197,10 @@ Aenean malesuada blandit elementum. Curabitur id tortor turpis. Phasellus ut fel
     color: #303030;
     outline: none;
     box-shadow: none;
+  }
+
+  .lang-input {
+    font-size: 1.1rem;
   }
 
   .lang-input, .lang-output, .mt-title {
@@ -275,6 +273,9 @@ Aenean malesuada blandit elementum. Curabitur id tortor turpis. Phasellus ut fel
   font-size: 0.9rem;  
 }
 
+.translate-output {
+  height: 14rem;
+}
 
 @media screen and (max-width: 500px)   { 
   .compare-output-container {
@@ -282,9 +283,11 @@ Aenean malesuada blandit elementum. Curabitur id tortor turpis. Phasellus ut fel
   }
   .translate-output {
     margin: 0 !important;
+    height: 11rem;
   }
-  .gt-title, .mt-title {
-    font-size: 0.9rem;
+  .btn-translate, .btn-remove-all {
+    font-size: 0.8rem;
+    width: 6rem;
   }
 } 
 </style>
@@ -292,36 +295,6 @@ Aenean malesuada blandit elementum. Curabitur id tortor turpis. Phasellus ut fel
 
 <script async src="https://www.google.com/recaptcha/api.js?render=6LcmgbQZAAAAABtOLkxEuM7hjtXxnr7Nwj8FQZl0"></script>
 
-<script>
-  $(document).ready(function () {
-
-      $("#test1").click(async function (event) {
-        console.log('TAM KAN')
-        //Don't submit yet
-        // event.preventDefault();
-        
-        //Secret key provided by Google
-        const apiKey = "6LcmgbQZAAAAABtOLkxEuM7hjtXxnr7Nwj8FQZl0";
-        const apiString = "http://localhost:5000/recaptcha-51410/us-central1/sendRecaptcha";
-        
-        try {
-
-            //Generate token
-            const token = await grecaptcha.execute(apiKey, { action: 'form' })
-            const response = await axios.get(`${apiString}?token=${token}`)
-            const score = response.data.score;
-            console.log("score: ", score);
-
-            if (score > 0.5) {
-              $(".btn-translate-fn").unbind('submit').submit();
-            }     
-        }      
-        catch(e) {
-            console.log("error: ", e);
-        }
-      });
-    });
-</script>
 <script>      
 
   let sl = "", tl = ""  
@@ -332,17 +305,14 @@ Aenean malesuada blandit elementum. Curabitur id tortor turpis. Phasellus ut fel
 
   async function googleApi(input){    
     try {
-      const response = await axios.get('https://translate.googleapis.com/translate_a/single?client=gtx&sl='
-                    + sl + '&tl=' 
-                    + tl + '&dt=t&q=' 
-                    + input)             
+      const response = await axios.get(`https://translate.googleapis.com/translate_a/single?client=gtx&sl=${sl}&tl=${tl}&dt=t&q=${input}`)          
       return response.data                
     } 
     catch (err) {
-      $('.textarea-gt-output').addClass('catch-error');
-      $('.compare-tran').removeClass('d-none')         
-      $('.textarea-gt-output').val("429: Too Many Request Error." +
-      "\nYou have sent too many requests recently." +
+      $('#compare-translate').removeClass('d-none')      
+      $('.textarea-gt-output').addClass('catch-error');         
+      $('.textarea-gt-output').val(      
+      "You have sent too many requests recently." +
       "\n\nPlease try again later or compare directly with google translation website link below."); 
     }
   }
@@ -363,23 +333,18 @@ Aenean malesuada blandit elementum. Curabitur id tortor turpis. Phasellus ut fel
     } catch (err) {     
       console.log(err)     
       $('.textarea-mt-output').addClass('catch-error');            
-      $('.textarea-mt-output').val(        
-      "\nYou have sent a request for exceeding the limit rate." + 
+      $('.textarea-mt-output').val(
+      "You have sent a request for exceeding the limit rate." + 
       "\n\nPlease try again in a few seconds.");       
     }    
-        
-    //Secret key provided by Google
-    const apiKey = "6LcmgbQZAAAAAFmUrFbzUKdBnWzrd95-Q_01zMnl";
-    const apiString = "";
-
 
   }
 
   async function translate() {
-    $('.loading').removeClass('d-none')
-    $('.btn-translate').addClass('d-none')
-    $('.btn-remove-all').addClass('d-none')
-    $('.compare-tran').addClass('d-none')         
+    $('#loading').removeClass('d-none')
+    $('#btn-translate').addClass('d-none')
+    $('#btn-remove-all').addClass('d-none')
+    $('#compare-translate').addClass('d-none')         
 
     const input = $('.textarea-input').val()    
     check_lang()
@@ -403,7 +368,7 @@ Aenean malesuada blandit elementum. Curabitur id tortor turpis. Phasellus ut fel
   }
 
   function check_lang() {
-    if($('.lang-input').text() == 'Thai'){
+    if($('#lang-input').text() == 'Thai'){
       sl = "th"
       tl = "en"
     } else {
@@ -413,24 +378,21 @@ Aenean malesuada blandit elementum. Curabitur id tortor turpis. Phasellus ut fel
   }
 
   function change_lang(original_lang, target_lang) {
-    $('.lang-input').html(original_lang);
-    $('.lang-output').html(target_lang);
+    $('#lang-input').html(original_lang);
+    $('#lang-output').html(target_lang);
   }
 
   function change_class() {     
-    // $('.translate-output').removeClass('d-flex')
-    // $('.translate-output').addClass('d-none') 
     $('.textarea-gt-output').val('')
     $('.textarea-mt-output').val('')
-    $('.btn-translate').removeClass('d-none')      
-    $('.btn-remove-all').addClass('d-none')         
+    $('#btn-translate').removeClass('d-none')              
   }
   
   $(document).ready(function(){
     $('[data-toggle="tooltip"]').tooltip();       
   });
 
-  $('input[type="text"], textarea').on('keyup', function () {
+  $('input[type="text"], textarea').on('input', function () {
     change_class()
   });
 
@@ -439,39 +401,71 @@ Aenean malesuada blandit elementum. Curabitur id tortor turpis. Phasellus ut fel
     change_class() 
   })
 
-  $('.btn-copy').click(function() {    
-    var copyText = document.getElementById('output-translation');
+  $('#btn-mt-copy').click(function() {    
+    var copyText = document.getElementById('output-mt-translation');
     copyText.select();
     copyText.setSelectionRange(0, 99999)
     document.execCommand("copy");    
   })
 
-  $('.btn-convert').click(function() {    
-    if($('.lang-input').text() == 'Thai') {      
+  $('#btn-gt-copy').click(function() {    
+    var copyText = document.getElementById('output-gt-translation');
+    copyText.select();
+    copyText.setSelectionRange(0, 99999)
+    document.execCommand("copy");    
+  })
+
+  $('#btn-convert').click(function() {    
+    if($('#lang-input').text() == 'Thai') {      
       change_lang('English', 'Thai');
     }else {
       change_lang('Thai', 'English');
     }
   })
 
-  $('.btn-translate-fn').click(async function() {        
-    if($(".textarea-input").val() != ''){
-      await translate();    //Translation function
-      $('.loading').addClass('d-none')              
-      $('.translate-output').removeClass('d-none')   
-      $('.translate-output').addClass('d-flex')    
-      $('.btn-remove-all').removeClass('d-none')  
-      $('.btn-translate').removeClass('d-none')   
-    } 
+  $('#btn-translate').click(async function() {        
+
+    const apiKey = "6LcmgbQZAAAAABtOLkxEuM7hjtXxnr7Nwj8FQZl0";
+    const apiString = "http://localhost:5000/recaptcha-51410/us-central1/sendRecaptcha";
+
+    try {
+
+      //Generate token
+      const token = await grecaptcha.execute(apiKey)
+      const response = await axios.get(`${apiString}?token=${token}`)
+      const score = response.data.score;
+      console.log("score: ", score);
+
+      if(($(".textarea-input").val() != '') && (score > 0.5)){
+        
+        await translate();    //Translation function
+        $('#loading').addClass('d-none')              
+        $('.translate-output').removeClass('d-none')   
+        $('.translate-output').addClass('d-flex')    
+        $('#btn-remove-all').removeClass('d-none')  
+        $('#btn-translate').removeClass('d-none')   
+
+      } 
+
+
+      if (score > 0.5) {
+          $("#btn-translate").unbind('submit').submit();
+            }     
+      }  
+
+    catch(e) {
+      console.log("error: ", e);
+    }
+
+
+    
   })
 
-  $('.link-google-tran').click(function() {
+  $('#link-google-translate').click(function() {
     check_lang()
+    const input = $(".textarea-input").val()
     window.open(
-      'https://translate.google.co.th/#view=home&op=translate&'
-      + 'sl=' + sl + '&' 
-      + 'tl=' + tl
-      + '&text=' + $(".textarea-input").val()
+      `https://translate.google.co.th/#view=home&op=translate&sl=${sl}&tl=${tl}&text=${input}`
       ,
       '_blank' 
     );
